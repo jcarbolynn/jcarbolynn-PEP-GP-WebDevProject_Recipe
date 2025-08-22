@@ -90,17 +90,14 @@ async function processLogin() {
             sessionStorage.setItem("auth-token", token);
             sessionStorage.setItem("isAdmin", isAdmin);
 
-
             // TODO: Optionally show the logout button if applicable
             logoutButton.style.display = "inline";
-
 
             // TODO: Add a small delay (e.g., 500ms) using setTimeout before redirecting
             // - Use window.location.href to redirect to the recipe page
             setTimeout(() => {
                 window.location.href = "recipe-page.html";
             }, 500);
-
 
         // TODO: If response status is 401
         // - Alert the user with "Incorrect login!"
@@ -112,7 +109,6 @@ async function processLogin() {
         } else {
             alert("Unknown issue!");
         }
-
     } catch (error) {
         // TODO: Handle any network or unexpected errors
         // - Log the error and alert the user
