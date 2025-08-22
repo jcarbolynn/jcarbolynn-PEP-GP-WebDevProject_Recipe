@@ -1,7 +1,7 @@
-commit a7a64d70c74b92833b32f1cbfe95cb10c5e9313b
+commit 821a8f360661def4438643cea05594f3e1f0b04b
 Author: Joelle Carbonell <nda108252@gmail.com>
-Date:   Fri Aug 22 18:28:53 2025 +0000
+Date:   Fri Aug 22 18:34:13 2025 +0000
 
-    register inputs
+    register js
 
- 31 files changed, 23 insertions(+)
+ 3 files changed, 121 insertions(+), 42 deletions(-)
