@@ -73,7 +73,7 @@ window.addEventListener("DOMContentLoaded", () => {
     async function searchRecipes() {
         // Implement search logic here
         const term = searchInput.value.trim().toLowerCase();
-        if (!term) return refreshRecipeList();
+        if (!term) return refreshRecipeList(recipes);
         const filtered = recipes.filter(r => r.name.toLowerCase().includes(term));
         refreshRecipeList(filtered);
     }
@@ -104,7 +104,7 @@ window.addEventListener("DOMContentLoaded", () => {
             if (res.ok) {
                 addName.value = "";
                 addInstructions.value = "";
-                getRecipes();
+                await getRecipes();
             } else {
                 alert("Failed to add recipe");
             }
@@ -138,12 +138,12 @@ window.addEventListener("DOMContentLoaded", () => {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ instructions })
+                body: JSON.stringify({ name, instructions })  // send both!
             });
             if (res.ok) {
                 updateName.value = "";
                 updateInstructions.value = "";
-                getRecipes();
+                await getRecipes();
             } else {
                 alert("Failed to update recipe");
             }
@@ -165,11 +165,6 @@ window.addEventListener("DOMContentLoaded", () => {
         const name = deleteName.value.trim();
         if (!name) return alert("Enter recipe name");
 
-        if (isAdmin !== "true") {
-            alert("Only admin can delete recipes");
-            return;
-        }
-
         const recipe = recipes.find(r => r.name === name);
         if (!recipe) return alert("Recipe not found");
 
@@ -180,7 +175,7 @@ window.addEventListener("DOMContentLoaded", () => {
             });
             if (res.ok) {
                 deleteName.value = "";
-                getRecipes();
+                await getRecipes();
             } else {
                 alert("Failed to delete recipe");
             }
@@ -201,7 +196,7 @@ window.addEventListener("DOMContentLoaded", () => {
         try {
             const res = await fetch(`${BASE_URL}/recipes`);
             recipes = await res.json();
-            refreshRecipeList();
+            refreshRecipeList(recipes);
         } catch (err) {
             console.error(err);
             alert("Failed to fetch recipes");
