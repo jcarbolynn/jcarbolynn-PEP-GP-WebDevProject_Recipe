@@ -20,7 +20,9 @@ const logoutButton = document.getElementById("logout-button");
  * TODO: Add click event listener to login button
  * - Call processLogin on click
  */
-loginButton.addEventListener("click", processLogin);
+if (loginButton) {
+    loginButton.addEventListener("click", processLogin);
+}
 
 /**
  * TODO: Process Login Function
@@ -44,8 +46,8 @@ loginButton.addEventListener("click", processLogin);
  * - Use `window.location.href` for redirection
  */
 async function processLogin() {
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value;
+    const username = loginUsername?.value.trim();
+    const password = loginPassword?.value.trim();
 
     if (!username || !password) {
         alert("Please enter both username and password");
@@ -66,10 +68,10 @@ async function processLogin() {
         const response = await fetch(`${BASE_URL}/login`, requestOptions);
 
         if (response.status === 200) {
-            // ✅ Parse JSON instead of text
+            // Parse JSON instead of text
             const data = await response.json();
 
-            // ✅ Store auth token
+            // Store auth token
             if (data["auth-token"]) {
                 sessionStorage.setItem("auth-token", data["auth-token"]);
             }
@@ -79,12 +81,15 @@ async function processLogin() {
                 sessionStorage.setItem("isAdmin", data["isAdmin"]);
             }
 
+            usernameInput.value = "";
+            passwordInput.value = "";
+
             // Show logout button (optional)
             if (logoutButton) {
                 logoutButton.style.display = "inline";
             }
 
-            // ✅ Redirect after short delay
+            // Redirect after short delay
             setTimeout(() => {
                 window.location.href = "recipe-page.html";
             }, 500);
