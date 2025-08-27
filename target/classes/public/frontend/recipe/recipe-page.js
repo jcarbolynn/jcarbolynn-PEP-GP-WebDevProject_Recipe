@@ -21,7 +21,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const deleteButton = document.getElementById("delete-recipe-submit-input");
 
     const token = sessionStorage.getItem("auth-token");
-    const isAdmin = sessionStorage.getItem("is-admin");
+    const isAdmin = sessionStorage.getItem("isAdmin");
 
     if (!token) {
         window.location.href = "login-page.html";

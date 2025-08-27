@@ -1,7 +1,7 @@
-commit de37d5b88bc562a684d55672ab77d854dcde8932
+commit aaf2ede287dc0fca3ce029a3b0a9673d227029e8
 Author: Joelle Carbonell <nda108252@gmail.com>
-Date:   Wed Aug 27 20:43:39 2025 +0000
+Date:   Wed Aug 27 20:49:50 2025 +0000
 
-    ingredient page
+    isadmin to is-admin in login
 
- 5 files changed, 220 insertions(+), 16 deletions(-)
+ 3 files changed, 8 insertions(+), 8 deletions(-)

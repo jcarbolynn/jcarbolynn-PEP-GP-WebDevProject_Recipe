@@ -75,8 +75,8 @@ async function processLogin() {
             }
 
             // Optional admin flag
-            if (data["is-admin"]) {
-                sessionStorage.setItem("is-admin", data["is-admin"]);
+            if (data["isAdmin"]) {
+                sessionStorage.setItem("isAdmin", data["isAdmin"]);
             }
 
             // Show logout button (optional)
