@@ -59,4 +59,111 @@ window.addEventListener("DOMContentLoaded", () => {
     async function searchRecipes() {
         const term = searchInput?.value.trim().toLowerCase() || "";
         if (!term) return refreshRecipeList(recipes);
-        const filtered = recipes.filter(r => r.name.toLower
+        const filtered = recipes.filter(r => r.name.toLowerCase().includes(term));
+        refreshRecipeList(filtered);
+    }
+
+    async function addRecipe() {
+        const name = addName?.value.trim();
+        const instructions = addInstructions?.value.trim();
+        if (!name || !instructions) return alert("Name & instructions required");
+
+        try {
+            const res = await fetch(`${BASE_URL}/recipes`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ name, instructions })
+            });
+            if (res.ok) {
+                addName.value = "";
+                addInstructions.value = "";
+                await getRecipes();
+            } else {
+                alert("Failed to add recipe");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Network error");
+        }
+    }
+
+    async function updateRecipe() {
+        const name = updateName?.value.trim();
+        const instructions = updateInstructions?.value.trim();
+        if (!name || !instructions) return alert("Name & instructions required");
+
+        const recipe = recipes.find(r => r.name === name);
+        if (!recipe) return alert("Recipe not found");
+
+        try {
+            const res = await fetch(`${BASE_URL}/recipes/${recipe.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ instructions })
+            });
+            if (res.ok) {
+                updateName.value = "";
+                updateInstructions.value = "";
+                await getRecipes();
+            } else {
+                alert("Failed to update recipe");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Network error");
+        }
+    }
+
+    async function deleteRecipe() {
+        const name = deleteName?.value.trim();
+        if (!name) return alert("Enter recipe name");
+
+        if (isAdmin !== "true") {
+            alert("Only admin can delete recipes");
+            return;
+        }
+
+        const recipe = recipes.find(r => r.name === name);
+        if (!recipe) return alert("Recipe not found");
+
+        try {
+            const res = await fetch(`${BASE_URL}/recipes/${recipe.id}`, {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (res.ok) {
+                deleteName.value = "";
+                await getRecipes();
+            } else {
+                alert("Failed to delete recipe");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Network error");
+        }
+    }
+
+    async function processLogout() {
+        try {
+            const res = await fetch(`${BASE_URL}/logout`, {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (res.ok) {
+                sessionStorage.clear();
+                window.location.href = "login-page.html";
+            } else {
+                alert("Logout failed");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Network error during logout");
+        }
+    }
+});
