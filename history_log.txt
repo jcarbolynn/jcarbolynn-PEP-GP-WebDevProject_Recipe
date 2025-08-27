@@ -1,7 +1,7 @@
-commit c8b30ae77490bd891d8e702e83c8fd8c28c427ca
+commit de37d5b88bc562a684d55672ab77d854dcde8932
 Author: Joelle Carbonell <nda108252@gmail.com>
-Date:   Wed Aug 27 20:36:39 2025 +0000
+Date:   Wed Aug 27 20:43:39 2025 +0000
 
-    .
+    ingredient page
 
- 3 files changed, 16 insertions(+), 26 deletions(-)
+ 5 files changed, 220 insertions(+), 16 deletions(-)
