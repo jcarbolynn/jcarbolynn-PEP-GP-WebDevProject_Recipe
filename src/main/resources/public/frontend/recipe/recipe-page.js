@@ -40,11 +40,11 @@ window.addEventListener("DOMContentLoaded", () => {
     /*
      * TODO: Show logout button if auth-token exists in sessionStorage
      */
-
+    if (token) logoutButton.style.display = "inline";
     /*
      * TODO: Show admin link if is-admin flag in sessionStorage is "true"
      */
-
+    if (isAdmin === "true") adminLink.style.display = "inline";
     /*
      * TODO: Attach event handlers
      * - Add recipe button → addRecipe()
@@ -53,11 +53,15 @@ window.addEventListener("DOMContentLoaded", () => {
      * - Search button → searchRecipes()
      * - Logout button → processLogout()
      */
-
+    logoutButton.addEventListener("click", processLogout);
+    searchButton.addEventListener("click", searchRecipes);
+    addButton.addEventListener("click", addRecipe);
+    updateButton.addEventListener("click", updateRecipe);
+    deleteButton.addEventListener("click", deleteRecipe);
     /*
      * TODO: On page load, call getRecipes() to populate the list
      */
-
+    getRecipes();
 
     /**
      * TODO: Search Recipes Function
@@ -68,6 +72,10 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function searchRecipes() {
         // Implement search logic here
+        const term = searchInput.value.trim().toLowerCase();
+        if (!term) return refreshRecipeList();
+        const filtered = recipes.filter(r => r.name.toLowerCase().includes(term));
+        refreshRecipeList(filtered);
     }
 
     /**
@@ -80,6 +88,30 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function addRecipe() {
         // Implement add logic here
+        const name = addName.value.trim();
+        const instructions = addInstructions.value.trim();
+        if (!name || !instructions) return alert("Name & instructions required");
+
+        try {
+            const res = await fetch(`${BASE_URL}/recipes`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ name, instructions })
+            });
+            if (res.ok) {
+                addName.value = "";
+                addInstructions.value = "";
+                getRecipes();
+            } else {
+                alert("Failed to add recipe");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Network error");
+        }
     }
 
     /**
@@ -92,6 +124,33 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function updateRecipe() {
         // Implement update logic here
+        const name = updateName.value.trim();
+        const instructions = updateInstructions.value.trim();
+        if (!name || !instructions) return alert("Name & instructions required");
+
+        const recipe = recipes.find(r => r.name === name);
+        if (!recipe) return alert("Recipe not found");
+
+        try {
+            const res = await fetch(`${BASE_URL}/recipes/${recipe.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ instructions })
+            });
+            if (res.ok) {
+                updateName.value = "";
+                updateInstructions.value = "";
+                getRecipes();
+            } else {
+                alert("Failed to update recipe");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Network error");
+        }
     }
 
     /**
@@ -103,6 +162,32 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function deleteRecipe() {
         // Implement delete logic here
+        const name = deleteName.value.trim();
+        if (!name) return alert("Enter recipe name");
+
+        if (isAdmin !== "true") {
+            alert("Only admin can delete recipes");
+            return;
+        }
+
+        const recipe = recipes.find(r => r.name === name);
+        if (!recipe) return alert("Recipe not found");
+
+        try {
+            const res = await fetch(`${BASE_URL}/recipes/${recipe.id}`, {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (res.ok) {
+                deleteName.value = "";
+                getRecipes();
+            } else {
+                alert("Failed to delete recipe");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Network error");
+        }
     }
 
     /**
@@ -113,6 +198,14 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function getRecipes() {
         // Implement get logic here
+        try {
+            const res = await fetch(`${BASE_URL}/recipes`);
+            recipes = await res.json();
+            refreshRecipeList();
+        } catch (err) {
+            console.error(err);
+            alert("Failed to fetch recipes");
+        }
     }
 
     /**
@@ -123,6 +216,12 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     function refreshRecipeList() {
         // Implement refresh logic here
+        recipeList.innerHTML = "";
+        list.forEach(r => {
+            const li = document.createElement("li");
+            li.textContent = `${r.name}: ${r.instructions}`;
+            recipeList.appendChild(li);
+        });
     }
 
     /**
@@ -134,6 +233,21 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function processLogout() {
         // Implement logout logic here
+        try {
+            const res = await fetch(`${BASE_URL}/logout`, {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (res.ok) {
+                sessionStorage.clear();
+                window.location.href = "login-page.html";
+            } else {
+                alert("Logout failed");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Network error during logout");
+        }
     }
 
 });
