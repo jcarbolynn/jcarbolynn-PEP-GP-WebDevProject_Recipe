@@ -138,7 +138,8 @@ window.addEventListener("DOMContentLoaded", () => {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ name, instructions })  // send both!
+                // body: JSON.stringify({ name, instructions })  // send both!
+                body: JSON.stringify({ instructions })
             });
             if (res.ok) {
                 updateName.value = "";
@@ -165,13 +166,20 @@ window.addEventListener("DOMContentLoaded", () => {
         const name = deleteName.value.trim();
         if (!name) return alert("Enter recipe name");
 
+        // Check admin privileges
+        const isAdmin = sessionStorage.getItem("isAdmin");
+        if (isAdmin !== "true") {
+            alert("Only admin can delete recipes");
+            return;
+        }
+
         const recipe = recipes.find(r => r.name === name);
         if (!recipe) return alert("Recipe not found");
 
         try {
             const res = await fetch(`${BASE_URL}/recipes/${recipe.id}`, {
                 method: "DELETE",
-                headers: { "Authorization": `Bearer ${token}` }
+                headers: { "Authorization": `Bearer ${sessionStorage.getItem("auth-token")}` }
             });
             if (res.ok) {
                 deleteName.value = "";

@@ -1,7 +1,7 @@
-commit 3108d79d18ebee279bd985b17296d577d374143f
+commit 48cf69e72122e3f830be3698c8404a544c51d495
 Author: Joelle Carbonell <nda108252@gmail.com>
-Date:   Wed Aug 27 02:26:20 2025 +0000
+Date:   Wed Aug 27 03:08:45 2025 +0000
 
-    recipe page
+    recipe page edits
 
- 3 files changed, 240 insertions(+), 12 deletions(-)
+ 2 files changed, 12 insertions(+), 22 deletions(-)
