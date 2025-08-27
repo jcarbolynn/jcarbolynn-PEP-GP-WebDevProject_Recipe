@@ -23,6 +23,11 @@ window.addEventListener("DOMContentLoaded", () => {
     const token = sessionStorage.getItem("auth-token");
     const isAdmin = sessionStorage.getItem("is-admin");
 
+    if (!token) {
+        window.location.href = "login-page.html";
+        return;
+    }
+
     // Show/hide logout/admin links
     if (logoutButton) logoutButton.style.display = token ? "inline" : "none";
     if (adminLink) adminLink.style.display = isAdmin === "true" ? "inline" : "none";
@@ -38,6 +43,14 @@ window.addEventListener("DOMContentLoaded", () => {
     async function getRecipes() {
         try {
             const res = await fetch(`${BASE_URL}/recipes`);
+
+            if (res.status === 401) {
+                alert("Session expired. Please log in again.");
+                sessionStorage.clear();
+                window.location.href = "login-page.html";
+                return;
+            }
+
             recipes = await res.json();
             refreshRecipeList(recipes);
         } catch (err) {
