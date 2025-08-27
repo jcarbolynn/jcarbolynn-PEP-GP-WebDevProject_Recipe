@@ -21,9 +21,9 @@ window.addEventListener("DOMContentLoaded", () => {
     const deleteButton = document.getElementById("delete-recipe-submit-input");
 
     const token = sessionStorage.getItem("auth-token");
-    const isAdmin = sessionStorage.getItem("isAdmin");
+    const isAdmin = sessionStorage.getItem("is-admin");
 
-    // Show/hide logout/admin links safely
+    // Show/hide logout/admin links
     if (logoutButton) logoutButton.style.display = token ? "inline" : "none";
     if (adminLink) adminLink.style.display = isAdmin === "true" ? "inline" : "none";
 
