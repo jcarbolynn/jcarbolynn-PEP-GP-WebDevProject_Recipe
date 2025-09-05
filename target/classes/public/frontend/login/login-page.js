@@ -86,7 +86,7 @@ async function processLogin() {
 
             // ✅ Redirect after short delay
             setTimeout(() => {
-                window.location.href = "recipe-page.html";
+                window.location.href = "../recipe/recipe-page.html";
             }, 500);
 
         } else if (response.status === 401) {
